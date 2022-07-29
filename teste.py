@@ -1,6 +1,10 @@
 import streamlit as st
 import time
+import plotly.express as px
 from PIL import Image
+import numpy as np
+import pandas as pd
+from matplotlib import pyplot as pyp
  
 image = Image.open('1.png')
 st.set_page_config(
@@ -18,62 +22,55 @@ st.set_page_config(
 
 st.title('Web App de teste')
 
-Total = 0
+Var = st.slider('De 0 a 100, quanto você gosta do Hiroki',  min_value=0.01, max_value=0.5, step=0.001, value=0)
+ 
+Var2 = [5000,5500,6000,6500,7000,7500,8000,8500,9000,9500,10000,10500,11000,11500,12000,12500,13000,13500,14000,14500,15000,15500,16000,16500,17000,17500,18000,18500,19000,19500,20000]
+Var3 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+Var4 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
-text = st.text_input(
-        label="Coloque o seu nome"
-    )
+a = 0
 
-escolha1 = st.selectbox('Você gosta do Hiroki?',('Sim','Não'))
-if escolha1 == 'Sim':
-    st.success('Que bom')
-    Total = Total + 2
-else:
-    st.error('Estou triste')
+If a < 31
+     Var3[a] = Var2[a]*Var
+     a = a + 1
+ 
+a = 0
 
-escolha2 = st.selectbox("Quanto mais ou menos", ("Bastante", "Normal", "Mais ou menos", "Pouco", "Nada"))
-if escolha2 == "Bastante":
-    st.info("Então você deve gostar bastante do Hiroki")
-    Total = Total + 16
-elif escolha2 == "Normal":
-    st.success("Tranquilo")
-    Total = Total + 8
-elif escolha2 == "Mais ou menos":
-    st.success("Essa afirmativa me parece mais negativa")
-    Total = Total + 4
-elif escolha2 == "Pouco":
-    st.warning("Que pena")
-    Total = Total + 2
-else:
-    st.error("Talvez estou triste")
-    Total = Total + 0
-
-escolha3 = st.slider('De 0 a 100, quanto você gosta do Hiroki',  min_value=0, max_value=100, step=1, value=0)
-if escolha3 <= 25:
-    st.error("Você não deve gostar de mim")
-elif escolha3 <=50 and escolha3 >25:
-    st.warning("Você não deve gostar muito de mim")
-elif escolha3 <= 75 and escolha3 > 50:
-    st.success("Você deve gostar de mim razoavelmente")
-elif escolha3 >75 and escolha3 <100:
-    st.success("Você deve gostar bastante de mim")
-else:
-    st.info("Você deve me amar")
-    
-options = st.multiselect(
-    'Coloque coisas que você gosta do Hiroki (Se não tiver, deixe em branco)',
-    ['Rosto', 'Cabelo', 'Personalidade', 'Mãos','Voz', 'Olhos'],
-    [])
-
-with st.form("my_form", clear_on_submit=False):
-    st.subheader('Preenche o formulário para enviar')
-    name = st.text_input('Coloque seu nome')
-    series = st.selectbox(label='Quanto tempo você conhece o Hiroki', options=["menos de um ano","dois anos","quase três anos"])
-    description = st.text_area('Seu sentimento para/com Hiroki')
-    submitted = st.form_submit_button("Enviar")
-     
-     
-if submitted:
-    with st.spinner("Enviando..."):
-        time.sleep(3)
-    st.success("Obrigado por envio, mas infelizmente esse é só um teste e não é enviado de verdade")
+If a < 31
+     Var4[a] = Var2[a]-Var3[a]
+     a = a + 1
+  
+fig = go.Figure()
+fig.add_traces(go.Scatter(x=np.linspace(0, 2000, 20000),
+                          y=Var2,
+                          marker_color='royalblue',
+                          line_width=3,
+                          name='Valor original')
+                )
+fig.add_traces(go.Scatter(x=np.linspace(0, 2000, 20000),
+                          y=Var3,
+                          line_width=3,
+                          marker_color='lightgrey',
+                          name='Porcentagem')
+                )
+fig.add_traces(go.Scatter(x=np.linspace(0, 2000, 20000),
+                          y=Var4,
+                          line_width=3,
+                          marker_color='grey',
+                          name='Original menos porcentagem')
+                )
+fig.update_layout(plot_bgcolor='white',
+                  legend=dict(x=0.02, y=0.9, 
+                              orientation='h'),
+                  xaxis=dict(tickfont_color='grey',
+                             showline=True,
+                             linewidth=1,
+                             linecolor='lightgrey'),
+                  yaxis=dict(tickfont_color='grey',
+                             showline=True,
+                             linewidth=1,
+                             linecolor='lightgrey'),
+)
+ 
+st.subheader('2021年の株価推移の比較')
+st.plotly_chart(fig)
